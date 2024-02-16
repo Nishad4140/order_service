@@ -3,7 +3,7 @@ module github.com/Nishad4140/order_service
 go 1.21.0
 
 require (
-	github.com/Nishad4140/proto_files v0.0.0-20240215180958-2cdcbb6daf8b
+	github.com/Nishad4140/proto_files v0.0.0-20240216085049-edae94a07903
 	github.com/hashicorp/consul/api v1.27.0
 	github.com/joho/godotenv v1.5.1
 	github.com/opentracing/opentracing-go v1.2.0

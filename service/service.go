@@ -63,9 +63,10 @@ func (order *OrderService) OrderAll(ctx context.Context, req *pb.UserId) (*pb.Or
 	if len(cart) == 0 {
 		return nil, fmt.Errorf("cart is empty")
 	}
+
 	if _, err := CartClient.TruncateCart(context.TODO(), &pb.CartCreate{
 		UserId: req.UserId,
-	}); err == nil {
+	}); err != nil {
 		return nil, err
 	}
 	orderId, err := order.Adapter.OrderAll(cart, uint(req.UserId))
@@ -81,6 +82,100 @@ func (order *OrderService) CancelOrder(ctx context.Context, req *pb.OrderId) (*p
 		return nil, err
 	}
 	return &pb.OrderId{OrderId: req.OrderId}, nil
+}
+
+func (order *OrderService) ChangeOrderStatus(ctx context.Context, req *pb.ChangeStatusRequest) (*pb.OrderId, error) {
+	err := order.Adapter.ChangeOrderStatus(int(req.OrderId), int(req.StatusId))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.OrderId{OrderId: req.OrderId}, nil
+}
+
+func (order *OrderService) GetAllOrdersUser(req *pb.UserId, srv pb.OrderService_GetAllOrdersUserServer) error {
+	orders, err := order.Adapter.GetAllOrdersUser(int(req.UserId))
+	if err != nil {
+		return err
+	}
+	for _, ordr := range orders {
+		var orderItems []*pb.OrderItems
+		for _, ordrItem := range ordr.OrderItems {
+			itm := &pb.OrderItems{
+				OrderId:  uint32(ordrItem.OrderId),
+				Id:       uint32(ordrItem.ProductId),
+				Quantity: int32(ordrItem.Quantity),
+				Price:    ordrItem.Total,
+			}
+			orderItems = append(orderItems, itm)
+		}
+		res := &pb.GetAllOrdersResponse{
+			OrderId:       uint32(ordr.OrderId),
+			AddressId:     uint32(ordr.AddressId),
+			PaymentTypeId: uint32(ordr.PaymentTypeId),
+			OrderStatusId: uint32(ordr.OrderStatusId),
+			OrderItems:    orderItems,
+		}
+		fmt.Println(ordr.OrderStatusId)
+		if err := srv.Send(res); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (order *OrderService) GetAllOrders(empty *pb.NoParam, srv pb.OrderService_GetAllOrdersServer) error {
+	orders, err := order.Adapter.GetAllOrders()
+	if err != nil {
+		return err
+	}
+	for _, ordr := range orders {
+		var orderItems []*pb.OrderItems
+		for _, ordrItem := range ordr.OrderItems {
+			itm := &pb.OrderItems{
+				OrderId:  uint32(ordrItem.OrderId),
+				Id:       uint32(ordrItem.ProductId),
+				Quantity: int32(ordrItem.Quantity),
+				Price:    ordrItem.Total,
+			}
+			orderItems = append(orderItems, itm)
+		}
+		res := &pb.GetAllOrdersResponse{
+			OrderId:       uint32(ordr.OrderId),
+			AddressId:     uint32(ordr.AddressId),
+			PaymentTypeId: uint32(ordr.PaymentTypeId),
+			OrderStatusId: uint32(ordr.OrderStatusId),
+			OrderItems:    orderItems,
+		}
+		if err := srv.Send(res); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (order *OrderService) GetOrder(ctx context.Context, req *pb.OrderId) (*pb.GetAllOrdersResponse, error) {
+	orderData, err := order.Adapter.GetOrder(int(req.OrderId))
+	if err != nil {
+		return &pb.GetAllOrdersResponse{}, err
+	}
+	var orderItems []*pb.OrderItems
+	for _, item := range orderData.OrderItems {
+		ordrItem := &pb.OrderItems{
+			Id:       uint32(item.ProductId),
+			OrderId:  uint32(item.OrderId),
+			Quantity: int32(item.Quantity),
+			Price:    item.Total,
+		}
+		orderItems = append(orderItems, ordrItem)
+	}
+	res := &pb.GetAllOrdersResponse{
+		OrderId:       req.OrderId,
+		AddressId:     uint32(orderData.AddressId),
+		PaymentTypeId: uint32(orderData.PaymentTypeId),
+		OrderStatusId: uint32(orderData.OrderStatusId),
+		OrderItems:    orderItems,
+	}
+	return res, nil
 }
 
 type HealthChecker struct {

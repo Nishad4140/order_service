@@ -9,6 +9,8 @@ github.com/Nishad4140/proto_files v0.0.0-20240215165850-f1abdbcb1435 h1:PEyeRyde
 github.com/Nishad4140/proto_files v0.0.0-20240215165850-f1abdbcb1435/go.mod h1:92srnlLz+sGX+nZcMnUED7+3Gvb7YkGFaZrBKC6NMUM=
 github.com/Nishad4140/proto_files v0.0.0-20240215180958-2cdcbb6daf8b h1:q0aYREuJsrWbPRmkUF60UMOHF3Z7i7aOZsfZTRExGm4=
 github.com/Nishad4140/proto_files v0.0.0-20240215180958-2cdcbb6daf8b/go.mod h1:92srnlLz+sGX+nZcMnUED7+3Gvb7YkGFaZrBKC6NMUM=
+github.com/Nishad4140/proto_files v0.0.0-20240216085049-edae94a07903 h1:pE9yiIyU0IYXuKOcADRv7DDZ5vvnO5yXOAkpnToNqzo=
+github.com/Nishad4140/proto_files v0.0.0-20240216085049-edae94a07903/go.mod h1:92srnlLz+sGX+nZcMnUED7+3Gvb7YkGFaZrBKC6NMUM=
 github.com/ajstarks/svgo v0.0.0-20180226025133-644b8db467af/go.mod h1:K08gAheRH3/J6wwsYMMT4xOr94bZjxIelGM0+d/wbFw=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
